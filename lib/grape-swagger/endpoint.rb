@@ -150,22 +150,25 @@ module Grape
       description
     end
 
-    def tag_object(routes, options)
-      routes.each do |route|
-        next if hidden?(route)
-        
-        path = route.route_path
-        path.sub!(/\(\.\w+?\)$/, '')
-        path.sub!('(.:format)', '')
-        path.gsub!(/:(\w+)/, '{\1}')
-        
-        item = path.gsub(%r{/{(.+?)}}, '').split('/').last.singularize.underscore.camelize || 'Item'
+    def tag_object(namespace_routes, options)
+      namespace_routes.keys.each do |key|
+        routes = namespace_routes[key]
+        routes.each do |route|
+          next if hidden?(route)
           
-        tag = {}
-        tag[:name] = item
-        tag[:description] = description_object(route, options[:markdown])
-  
-        @tags << tag
+          path = route.route_path
+          path.sub!(/\(\.\w+?\)$/, '')
+          path.sub!('(.:format)', '')
+          path.gsub!(/:(\w+)/, '{\1}')
+          
+          item = path.gsub(%r{/{(.+?)}}, '').split('/').last.singularize.underscore.camelize || 'Item'
+            
+          tag = {}
+          tag[:name] = item
+          tag[:description] = description_object(route, options[:markdown])
+    
+          @tags << tag
+        end
       end
     end
 
