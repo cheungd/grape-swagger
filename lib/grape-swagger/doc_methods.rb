@@ -71,6 +71,7 @@ module GrapeSwagger
 
         target_routes        = { params[:name] => combined_routes }
         paths, definitions   = path_and_definition_objects(target_routes, options)
+        output[:tags]        = tag_object(target_routes, options)
         output[:paths]       = paths unless paths.blank?
         output[:definitions] = definitions unless definitions.blank?
 
